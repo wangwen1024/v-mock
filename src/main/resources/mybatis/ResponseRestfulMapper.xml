@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vmock.biz.mapper.ResponseRestfulMapper">
+
+    <select id="getRestfulList" resultType="com.vmock.base.vo.ResponseRestfulVo">
+        SELECT
+           	rr.response_id,
+            rr.url_id,
+            dd.dict_value,
+            rr.description,
+            rr.status_code
+        FROM
+        sys_dict_data dd
+        LEFT JOIN mock_response_restful rr
+            ON dd.dict_sort = rr.http_method
+            and rr.url_id =  #{urlId}
+        where dd.dict_type = 'http_method'
+    </select>
+</mapper>
