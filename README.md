@@ -1,0 +1,102 @@
+![-VMock](doc/vmock.png)
+# V-Mock
+
+简单，轻量级，秒部署的接口模拟系统。
+
+### V-Mock是什么
+
+V-Mock是一个小巧的接口响应模拟系统，安装完成后，录入你要模拟的接口URL，及该URL返回的JSON，XML或者其他格式的返回数据，即可开始调用。
+
+### 功能
+
+* 支持任何请求类型，包括Path传参请求。
+* 支持自定义的响应Header，http status code，以及返回体。(但是不建议乱写http码，比如有的浏览器接收到返回状态是789，可能请求就挂了)
+* 提供每次调用成功的详细【请求体详细】以及【响应体详细】的日志，请求头..参数..Header..Cookies都能找到。
+* 支持创建多种返回格式，一键切换。
+* Sqlite嵌入式数据库，用户不用关心数据库事项，可以当作没有数据库。  
+
+ps： 暂时不支持根据请求参数的逻辑切换返回格式，仅可以在后台一键切换返回体，但这样的好处是方便开发/测试人员测试。
+
+### 什么场景你可能会用V-Mock？
+
+* 前后端对接，后端暂未开发完成。
+* 第三方对接，但对方无法提供测试环境。
+* 要求Mock功能对代码“**0**”污染
+* 公司数据安全严格/Mock数据无法托管到第三方/内网开发等情况。
+* 觉得同类高端软件功能太多用不上/不易部署等😀
+
+### 如何安装
+
+如果只是使用，我们只需要JRE即可，无需任何其他软件。   
+不用clone源码！！！直接到[Releases](https://github.com/i-am-vt/v-mock/releases)页面（访问慢可以用[码云的](https://gitee.com/vtDev/v-mock/releases)），下载最新版本的jar包  
+
+只需一行命令即可使用  
+```
+java -jar v-mock.jar
+```   
+
+默认80端口 可以追加 --server.port=xxx 自己指定 
+
+🌟<s>**需要注意！** sqlite的数据库临时文件默认是放在java.io.tmpdir下，暂无其他变量控制，默认是系统的临时文件目录，   
+如果你的设备会有**清理临时文件**的操作，可以在-jar之前插入`-Djava.io.tmpdir=xxxxx`修改本项目的tmpdir路径，以免造成数据丢失。</s>
+新版默认修改了java.io.tmpdir路径为当前jar所在位置, 以防数据文件丢失。
+
+例如, 8098端口启动：  
+```
+java -jar v-mock.jar --server.port=8089
+``` 
+
+推荐保存为sh或bat脚本，方便下次使用。
+
+
+## 如何使用
+
+安装完成后，根据自己的ip以及指定的端口，访问V-Mock后台界面。
+使用管理员账号：vmock/vmock123 登录系统
+
+登录成功后，即可在【接口一览】模块，配置需要Mock的URL了。
+
+##### 注意
+所有被Mock的URL所属Context Path默认是 /vmock
+则如果配置了/v1/test，请求是由http(s)://ip:prot/vmock/v1/test接收
+也就是说如果调用者的系统，是将根路径写在配置文件中的话，需要把/vmock加上即可  
+
+
+如果配置了矛盾的URL，那么Path优先级是最低的。如： 配置了`/v1/test/{path}`又配置了`/v1/test/12`
+那么访问/vmock/v1/test/12进的是`1/test/12`的配置，/vmock/v1/test/13会进入`/v1/test/{path}`的配置
+
+##### 多用户
+管理员也可以修改系统参数中的【邀请码】，则普通用户即可通过邀请码自行注册系统。
+
+##### 权限
+权限设计非常简洁：
+* 管理员：能多看见【系统参数】【用户管理】两个模块。
+* 普通用户：可以使用【接口一览】和【接口日志】模块。
+* 未登录：可以调用/vmock下，系统中配置好的Mock接口。
+
+## 部分截图展示
+登录 注册
+<div align="center">
+    <img src="doc/denglu.png" height="200px" alt="登录" >
+    <img src="doc/zhuce.png" height="200px" alt="注册" >
+</div>
+接口一览 返回体一览
+<div align="center">
+    <img src="doc/jiekouyilan.png" height="200px" alt="接口一览" >
+    <img src="doc/fanhuitiyilan.png" height="200px" alt="返回体一览" >
+</div>
+增加返回体 Postman调用结果
+<div align="center">
+    <img src="doc/zengjiafanhuiti.png" height="200px" alt="增加返回体" >
+    <img src="doc/postman1.png" height="200px" alt="Postman调用结果" >
+</div>
+日志一览 修改邀请码
+<div align="center">
+    <img src="doc/rizhiyilan.png" height="200px" alt="日志一览" >
+    <img src="doc/xiugaiyaoqingma.png" height="200px" alt="修改邀请码" >
+</div>
+请求详细 响应详细
+<div align="center">
+    <img src="doc/qingqiuxiangxi.png" height="200px" alt="请求详细" >
+    <img src="doc/xiangyingxiangxi.png" height="200px" alt="响应详细" >
+</div>
